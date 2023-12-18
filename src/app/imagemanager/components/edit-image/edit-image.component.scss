@@ -1,0 +1,19 @@
+.edit-image {
+  &-form {
+    margin: 5px auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    gap: 25px;
+  }
+
+  &-full-width {
+    width: 100%;
+  }
+
+  &-title {
+    text-align: center;
+  }
+}

@@ -1,0 +1,38 @@
+<mat-card style="margin-bottom: 45px">
+  <div *ngIf="!isLoading; else loading">
+    <div *ngIf="!hasError; else error">
+      <mat-paginator
+        [length]="fetchedImages.length"
+        [pageSize]="imagesPerPage"
+        [pageSizeOptions]="pageSizeOptions"
+        [hidePageSize]="false"
+        [pageIndex]="currentPage"
+        (page)="handlePageEvent($event)"
+      >
+      </mat-paginator>
+      <div class="img-list">
+        <div
+          class="img-list-item"
+          *ngFor="let img of imagesToShow"
+          (click)="handleClick(img.id)"
+        >
+          <img [src]="img.url" [alt]="img.title" />
+          <span style="text-align: center"
+            >{{ img.title.substring(0, 15) }}...</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>
+
+<ng-template #error>
+  <div style="display: flex; justify-content: flex-start; gap: 10px">
+    <button mat-raised-button color="warn">{{ errorStatus }}</button>
+    <button mat-raised-button color="warn">{{ errorMessage }}</button>
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>

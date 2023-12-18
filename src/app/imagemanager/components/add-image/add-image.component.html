@@ -1,0 +1,93 @@
+<mat-card style="padding: 25px">
+  <h1 class="add-image-title">Add image</h1>
+  <form
+    #addForm="ngForm"
+    (submit)="handleSubmit($event)"
+    class="add-image-form"
+    ngNativeValidate
+  >
+    <mat-form-field class="add-image-full-width">
+      <mat-label>Title</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="titleFormControl"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-hint>Errors appear instantly!</mat-hint>
+      <mat-error
+        *ngIf="
+          titleFormControl.hasError('minlength') &&
+          !titleFormControl.hasError('required')
+        "
+        >The title must be at least
+        <strong>10 characters long</strong>.</mat-error
+      >
+      <mat-error *ngIf="titleFormControl.hasError('required')"
+        >Title is <strong>required</strong></mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field class="add-image-full-width">
+      <mat-label>Image URL</mat-label>
+      <input
+        type="url"
+        matInput
+        [formControl]="urlFormControl"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-hint>Errors appear instantly!</mat-hint>
+      <mat-error
+        *ngIf="
+          !urlFormControl.hasError('required') &&
+          urlFormControl.hasError('pattern')
+        "
+      >
+        Invalid url <strong>pattern</strong>.
+      </mat-error>
+      <mat-error *ngIf="urlFormControl.hasError('required')"
+        >Image URL is <strong>required</strong></mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field class="add-image-full-width">
+      <mat-label>Thumbnail URL</mat-label>
+      <input
+        type="url"
+        matInput
+        [formControl]="thumbUrlFormControl"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-hint>Errors appear instantly!</mat-hint>
+      <mat-error
+        *ngIf="
+          !thumbUrlFormControl.hasError('required') &&
+          thumbUrlFormControl.hasError('pattern')
+        "
+      >
+        Invalid url <strong>pattern</strong>.
+      </mat-error>
+      <mat-error *ngIf="thumbUrlFormControl.hasError('required')"
+        >Thumbnail URL is <strong>required</strong></mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field class="add-image-full-width">
+      <mat-label>Album</mat-label>
+      <mat-select
+        [formControl]="albumFormControl"
+        [errorStateMatcher]="matcher"
+      >
+        <mat-option *ngFor="let album of albums" [value]="album.id">{{
+          album.title
+        }}</mat-option>
+      </mat-select>
+      <mat-hint>Errors appear instantly!</mat-hint>
+      <mat-error *ngIf="albumFormControl.hasError('required')"
+        >Album is <strong>required</strong>.</mat-error
+      >
+    </mat-form-field>
+
+    <button type="submit" mat-raised-button color="primary">Submit</button>
+  </form>
+</mat-card>

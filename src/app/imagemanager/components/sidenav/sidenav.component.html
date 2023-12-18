@@ -1,0 +1,62 @@
+<mat-sidenav-container class="app-sidenav-container">
+  <mat-sidenav
+    #sidenav
+    class="app-sidenav mat-elevation-z10"
+    [opened]="!isScreenSmall"
+    [mode]="isScreenSmall ? 'over' : 'side'"
+  >
+    <mat-toolbar color="primary"> Menu </mat-toolbar>
+    <mat-list role="list">
+      <mat-list-item role="listitem">
+        <a
+          routerLink="welcome"
+          routerLinkActive="menu-list-item-active-link"
+          mat-button
+          style="width: 100%; text-align: left"
+          >Welcome</a
+        >
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <a
+          routerLink="images"
+          routerLinkActive="menu-list-item-active-link"
+          mat-button
+          style="width: 100%; text-align: left"
+          >Browse Images</a
+        >
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <a
+          mat-button
+          style="width: 100%; text-align: left"
+          routerLink="add"
+          routerLinkActive="menu-list-item-active-link"
+        >
+          Add image
+        </a>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <a
+          mat-button
+          style="width: 100%; text-align: left"
+          href="#"
+          target="_blank"
+          disabled="true"
+        >
+          Source code
+        </a>
+      </mat-list-item>
+    </mat-list>
+
+    <div style="position: absolute; bottom: 0; left: 0px; width: 100%">
+      <a style="width: 100%" mat-button>&copy; Dario Mitev</a>
+    </div>
+  </mat-sidenav>
+
+  <div class="app-sidenav-content">
+    <app-toolbar (toggleSidenav)="sidenav.toggle()"></app-toolbar>
+    <div class="wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</mat-sidenav-container>
