@@ -7,6 +7,7 @@ import { Album } from '../../models/Album';
 import { forkJoin, switchMap } from 'rxjs';
 import { MyErrorStateMatcher } from 'src/app/shared/ErrorStateMatcher';
 import { FireNotification } from 'src/app/shared/FireNotification';
+import { CustomError } from 'src/app/shared/CustomError';
 
 @Component({
   selector: 'app-edit-image',
@@ -23,7 +24,8 @@ export class EditImageComponent implements OnInit {
   albums: Album[] = [];
 
   isLoading: boolean = true;
-  error: any = null;
+  processing: boolean = false;
+  error: CustomError | null = null;
 
   reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
 
@@ -50,6 +52,13 @@ export class EditImageComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
 
   ngOnInit(): void {
+    this.fetchData();
+  }
+
+  fetchData() {
+    this.isLoading = true;
+    this.error = null;
+
     this.route.params
       .pipe(
         switchMap((params: Params) => {
@@ -77,7 +86,7 @@ export class EditImageComponent implements OnInit {
           // TODO: Handle errors appropriately.
           console.error(error);
           this.isLoading = false;
-          this.error = '...';
+          this.error = new CustomError(error.message, error.status);
         },
         complete: () => {},
       });
@@ -85,6 +94,8 @@ export class EditImageComponent implements OnInit {
 
   handleSubmit(event: SubmitEvent) {
     event.preventDefault();
+    this.processing = true;
+    this.disableFormFields();
     this.imgService
       .editPhoto(
         new Image(
@@ -101,10 +112,32 @@ export class EditImageComponent implements OnInit {
         },
         error: (error) => {
           FireNotification(error.message, 'error');
+          this.processing = false;
+          this.enableFormFields();
         },
         complete: () => {
           FireNotification('Your changes have been saved.', 'success');
+          this.processing = false;
+          this.enableFormFields();
         },
       });
+  }
+
+  retry() {
+    this.fetchData();
+  }
+
+  enableFormFields() {
+    this.albumFormControl.enable();
+    this.titleFormControl.enable();
+    this.urlFormControl.enable();
+    this.thumbUrlFormControl.enable();
+  }
+
+  disableFormFields() {
+    this.albumFormControl.disable();
+    this.titleFormControl.disable();
+    this.urlFormControl.disable();
+    this.thumbUrlFormControl.disable();
   }
 }

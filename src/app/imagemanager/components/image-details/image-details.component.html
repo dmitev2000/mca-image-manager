@@ -1,31 +1,43 @@
 <mat-card style="position: relative; padding: 25px">
   <div *ngIf="!isLoading; else loading">
-    <div class="img-details">
-      <button
-        class="img-details-options-btn"
-        matTooltip="Options"
-        mat-icon-button
-        color="primary"
-        aria-label="Image options"
-        [matMenuTriggerFor]="menu"
+    <div *ngIf="error !== null; else details">
+      <app-display-error
+        [errorMessage]="error.message"
+        [errorStatus]="error.status"
+      ></app-display-error>
+      <a mat-raised-button color="primary" routerLink="/imagemanager/images"
+        >Back to list</a
       >
-        <mat-icon>expand_more</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button (click)="editImage()" mat-menu-item>
-          <mat-icon color="primary">edit</mat-icon>
-          <span>Edit image</span>
-        </button>
-        <button (click)="deleteImage()" mat-menu-item>
-          <mat-icon color="warn">delete_forever</mat-icon>
-          <span>Delete image</span>
-        </button>
-      </mat-menu>
-      <h3 class="img-details-title">{{ image.title }}</h3>
-      <img [src]="image.url" [alt]="image.title" />
     </div>
   </div>
 </mat-card>
+
+<ng-template #details>
+  <div class="img-details">
+    <button
+      class="img-details-options-btn"
+      matTooltip="Options"
+      mat-icon-button
+      color="primary"
+      aria-label="Image options"
+      [matMenuTriggerFor]="menu"
+    >
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button (click)="editImage()" mat-menu-item>
+        <mat-icon color="primary">edit</mat-icon>
+        <span>Edit image</span>
+      </button>
+      <button (click)="deleteImage()" mat-menu-item>
+        <mat-icon color="warn">delete_forever</mat-icon>
+        <span>Delete image</span>
+      </button>
+    </mat-menu>
+    <h3 class="img-details-title">{{ image.title }}</h3>
+    <img [src]="image.url" [alt]="image.title" />
+  </div>
+</ng-template>
 
 <ng-template #loading>
   <app-loading></app-loading>

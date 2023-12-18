@@ -6,6 +6,15 @@ import { FormControl, Validators } from '@angular/forms';
 import { ImageService } from '../../image.service';
 import { Router } from '@angular/router';
 import { FireNotification } from 'src/app/shared/FireNotification';
+import { CustomError } from 'src/app/shared/CustomError';
+import { HttpErrorResponse } from '@angular/common/http';
+
+const enum Status {
+  'OK' = 'OK',
+  'Fetch' = 'Fetching albums...',
+  'Saving' = 'Processing... (saving image)',
+  'Idle' = -1,
+}
 
 @Component({
   selector: 'app-add-image',
@@ -15,17 +24,12 @@ import { FireNotification } from 'src/app/shared/FireNotification';
 export class AddImageComponent implements OnInit {
   constructor(private imgService: ImageService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.imgService.getAlbums().subscribe({
-      next: (data: Album[]) => {
-        this.albums = data;
-      },
-      error: () => {},
-      complete: () => {},
-    });
-  }
-
   reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+
+  isLoading = true;
+  processing = false;
+  error: CustomError | null = null;
+  status: Status = Status.Fetch;
 
   albums: Album[] = [];
 
@@ -48,8 +52,17 @@ export class AddImageComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
+  ngOnInit(): void {
+    this.fetchAlbums();
+  }
+
   handleSubmit(event: SubmitEvent) {
     event.preventDefault();
+
+    this.processing = true;
+    this.disableFormFields();
+    this.status = Status.Saving;
+
     this.imgService
       .addPhoto(
         new NewImage(
@@ -63,14 +76,59 @@ export class AddImageComponent implements OnInit {
         next: (resp) => {
           console.log(resp);
         },
-        error: (error) => {
+        error: (error: HttpErrorResponse) => {
           //console.log(error);
           FireNotification(error.message, 'error');
+          this.error = new CustomError(error.message, error.status);
+          this.status = Status.Idle;
+          this.processing = false;
+          this.enableFormFields();
         },
         complete: () => {
+          this.status = Status.OK;
           FireNotification('Your image has been saved', 'success');
           this.router.navigate(['imagemanager', 'images']);
         },
       });
+  }
+
+  enableFormFields() {
+    this.albumFormControl.enable();
+    this.titleFormControl.enable();
+    this.urlFormControl.enable();
+    this.thumbUrlFormControl.enable();
+  }
+
+  disableFormFields() {
+    this.albumFormControl.disable();
+    this.titleFormControl.disable();
+    this.urlFormControl.disable();
+    this.thumbUrlFormControl.disable();
+  }
+
+  fetchAlbums() {
+    this.status = Status.Fetch;
+    this.isLoading = true;
+    this.error = null;
+    this.imgService.getAlbums().subscribe({
+      next: (data: Album[]) => {
+        this.albums = data;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
+        this.status = Status.Idle;
+        this.error = new CustomError(error.message, error.status);
+        this.disableFormFields();
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.status = Status.OK;
+        this.enableFormFields();
+      },
+    });
+  }
+
+  retry() {
+    this.fetchAlbums();
   }
 }

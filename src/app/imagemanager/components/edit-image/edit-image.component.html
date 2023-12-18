@@ -1,7 +1,26 @@
 <mat-card>
   <h1 class="edit-image-title">Edit image</h1>
+
+  <div *ngIf="error !== null">
+    <app-display-error
+      [errorMessage]="error.message"
+      [errorStatus]="error.status"
+    >
+    </app-display-error>
+    <div class="edit-image-error-actions">
+      <button mat-raised-button color="primary" (click)="retry()">Retry</button>
+      <a mat-raised-button color="primary" routerLink="/imagemanager/images"
+        >Back to list</a
+      >
+    </div>
+  </div>
+
+  <div *ngIf="isLoading || processing">
+    <app-loading></app-loading>
+  </div>
+
   <form
-    *ngIf="!isLoading; else loading"
+    *ngIf="!isLoading && error === null"
     (submit)="handleSubmit($event)"
     class="edit-image-form"
     ngNativeValidate
@@ -99,12 +118,9 @@
       mat-raised-button
       color="primary"
       style="margin-bottom: 15px"
+      [disabled]="processing"
     >
       Save changes
     </button>
   </form>
 </mat-card>
-
-<ng-template #loading>
-  <app-loading></app-loading>
-</ng-template>

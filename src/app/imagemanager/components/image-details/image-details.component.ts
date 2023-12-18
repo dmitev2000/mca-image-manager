@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Image } from 'src/app/imagemanager/models/Image';
 import { ImageService } from '../../image.service';
 import Swal from 'sweetalert2';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CustomError } from 'src/app/shared/CustomError';
 
 @Component({
   selector: 'app-image-details',
@@ -19,19 +20,28 @@ export class ImageDetailsComponent implements OnInit {
 
   image: Image;
   isLoading = true;
+  error: CustomError | null = null;
 
   ngOnInit(): void {
     this.route.params.subscribe({
-      next: (params) => {
+      next: (params: Params) => {
         const { id } = params;
         //console.log(id);
         this.imgService.getPhotoById(id).subscribe({
-          next: (data) => {
-            this.image = <Image>data;
+          next: (data: Image) => {
+            this.image = data;
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+            this.error = new CustomError(
+              error.message,
+              error.status
+            );
             this.isLoading = false;
           },
-          error: (error) => {
-            console.log(error);
+          complete: () => {
+            this.isLoading = false;
+            this.error = null;
           },
         });
       },
