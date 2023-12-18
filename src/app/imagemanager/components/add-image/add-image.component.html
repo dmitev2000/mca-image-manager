@@ -1,5 +1,19 @@
 <mat-card style="padding: 25px">
   <h1 class="add-image-title">Add image</h1>
+  <div>
+    <app-loading *ngIf="processing || isLoading"></app-loading>
+    <app-status
+      *ngIf="status !== 'OK' && status !== -1"
+      [statusText]="status"
+    ></app-status>
+    <div *ngIf="error !== null">
+      <app-display-error
+        [errorMessage]="error.message"
+        [errorStatus]="error.status"
+      ></app-display-error>
+      <button (click)="retry()" mat-raised-button color="primary">Retry</button>
+    </div>
+  </div>
   <form
     #addForm="ngForm"
     (submit)="handleSubmit($event)"
@@ -13,6 +27,7 @@
         matInput
         [formControl]="titleFormControl"
         [errorStateMatcher]="matcher"
+        minlength="10"
       />
       <mat-hint>Errors appear instantly!</mat-hint>
       <mat-error
@@ -88,6 +103,13 @@
       >
     </mat-form-field>
 
-    <button type="submit" mat-raised-button color="primary">Submit</button>
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="isLoading || processing || status !== 'OK'"
+    >
+      Submit
+    </button>
   </form>
 </mat-card>

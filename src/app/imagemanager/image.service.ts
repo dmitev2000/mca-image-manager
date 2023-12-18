@@ -5,6 +5,7 @@ import { NewImage } from './models/NewImage';
 import { Observable, catchError, throwError } from 'rxjs';
 import { ALBUMS_URL, PHOTOS_URL } from '../shared/URLs';
 import { Album } from './models/Album';
+import { CustomError, EvaluateErrorMessage } from '../shared/CustomError';
 
 @Injectable({
   providedIn: 'root',
@@ -55,18 +56,20 @@ export class ImageService {
   }
 
   private handleError(error: HttpErrorResponse) {
+    var msg;
+
     if (error.status === 0) {
-      console.error('Client or network error', error.error);
+      //console.error('Client or network error', error);
+      msg = 'Client or network error. Check your connection.';
+    } else if (error.status >= 500) {
+      //console.error('Server side error', error);
+      msg = 'Server side error, please try again.';
     } else {
-      console.error('Server side error', error);
+      msg = EvaluateErrorMessage(error.message, error.status);
     }
 
-    let msg = error.status === 404 ? 'Not found' : 'Something went wrong';
-
     return throwError(() => {
-      const error = new Error();
-      error.message = msg;
-      return error;
+      return new CustomError(msg, error.status);
     });
   }
 }

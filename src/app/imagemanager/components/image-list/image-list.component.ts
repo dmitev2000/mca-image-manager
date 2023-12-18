@@ -27,6 +27,12 @@ export class ImageListComponent implements OnInit {
   errorMessage: string | undefined;
 
   ngOnInit(): void {
+    this.fetchImages();
+  }
+
+  fetchImages() {
+    this.hasError = false;
+    this.isLoading = true;
     this.imageService.getPhotos().subscribe({
       next: (data: Image[]) => {
         this.fetchedImages = data;
@@ -38,7 +44,7 @@ export class ImageListComponent implements OnInit {
         console.error(error);
         this.hasError = true;
         this.errorStatus = error.status;
-        this.errorMessage = 'Something went wrong...';
+        this.errorMessage = error.message;
         this.isLoading = false;
       },
       complete: () => {
@@ -57,5 +63,9 @@ export class ImageListComponent implements OnInit {
     this.imagesToShow = this.fetchedImages.slice(from, to);
     this.currentPage = event.pageIndex;
     this.imagesPerPage = event.pageSize;
+  }
+
+  retry() {
+    this.fetchImages();
   }
 }

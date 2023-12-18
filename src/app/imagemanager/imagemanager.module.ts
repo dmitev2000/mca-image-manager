@@ -16,6 +16,8 @@ import { EditImageComponent } from './components/edit-image/edit-image.component
 import { ImageDetailsComponent } from './components/image-details/image-details.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './components/loading/loading.component';
+import { DisplayErrorComponent } from './components/display-error/display-error.component';
+import { StatusComponent } from './components/status/status.component';
 
 const routes: Routes = [
   {
@@ -46,6 +48,8 @@ const routes: Routes = [
     ImageDetailsComponent,
     EditImageComponent,
     LoadingComponent,
+    DisplayErrorComponent,
+    StatusComponent,
   ],
   imports: [
     CommonModule,

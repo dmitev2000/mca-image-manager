@@ -27,9 +27,13 @@
 </mat-card>
 
 <ng-template #error>
-  <div style="display: flex; justify-content: flex-start; gap: 10px">
-    <button mat-raised-button color="warn">{{ errorStatus }}</button>
-    <button mat-raised-button color="warn">{{ errorMessage }}</button>
+  <div>
+    <app-display-error
+      style="min-width: 100%"
+      [errorMessage]="errorMessage"
+      [errorStatus]="errorStatus"
+    ></app-display-error>
+    <button mat-raised-button color="primary" (click)="retry()">Retry</button>
   </div>
 </ng-template>
 
