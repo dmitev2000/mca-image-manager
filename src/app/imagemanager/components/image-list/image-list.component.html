@@ -16,7 +16,10 @@
           *ngFor="let img of imagesToShow"
           (click)="handleClick(img.id)"
         >
-          <img [src]="img.url" [alt]="img.title" />
+          <img
+            [src]="img.thumbnailUrl"
+            [alt]="img.title.concat('-thumbnail')"
+          />
           <span style="text-align: center"
             >{{ img.title.substring(0, 15) }}...</span
           >

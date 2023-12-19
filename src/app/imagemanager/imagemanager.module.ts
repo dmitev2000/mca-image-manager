@@ -19,19 +19,38 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { DisplayErrorComponent } from './components/display-error/display-error.component';
 import { StatusComponent } from './components/status/status.component';
 
+const prefix = 'Image Manager - ';
+
 const routes: Routes = [
   {
     path: '',
     component: ImagemanagerAppComponent,
     children: [
-      { path: 'welcome', component: WeclomeComponent },
+      {
+        path: 'welcome',
+        component: WeclomeComponent,
+        title: `${prefix}Welcome`,
+      },
       {
         path: 'images',
         component: ImageListComponent,
+        title: `${prefix}Browse Images`,
       },
-      { path: 'details/:id', component: ImageDetailsComponent },
-      { path: 'add', component: AddImageComponent },
-      { path: 'edit/:id', component: EditImageComponent },
+      {
+        path: 'details/:id',
+        component: ImageDetailsComponent,
+        title: `${prefix}Image Details`,
+      },
+      {
+        path: 'add',
+        component: AddImageComponent,
+        title: `${prefix}Add image`,
+      },
+      {
+        path: 'edit/:id',
+        component: EditImageComponent,
+        title: `${prefix}Edit Image`,
+      },
       { path: '**', redirectTo: 'welcome' },
     ],
   },
@@ -61,4 +80,4 @@ const routes: Routes = [
     HttpClientModule,
   ],
 })
-export class ContactmanagerModule {}
+export class ImagemanagerModule {}

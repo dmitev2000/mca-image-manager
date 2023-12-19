@@ -12,7 +12,7 @@ const routes: Routes = [
     path: 'imagemanager',
     loadChildren: () =>
       import('./imagemanager/imagemanager.module').then(
-        (m) => m.ContactmanagerModule
+        (m) => m.ImagemanagerModule
       ),
   },
   { path: '**', redirectTo: 'imagemanager' },
