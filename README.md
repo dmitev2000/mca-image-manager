@@ -1,1 +1,1 @@
-# MCA IMAGE MANAGER :fa-image:
+# MCA IMAGE MANAGER

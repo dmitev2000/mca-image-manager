@@ -34,8 +34,20 @@
         <span>Delete image</span>
       </button>
     </mat-menu>
-    <h3 class="img-details-title">{{ image.title }}</h3>
-    <img [src]="image.url" [alt]="image.title" />
+    <h3 class="img-details-title">{{ image.title | uppercase }}</h3>
+    <div class="img-details-iuitu">
+      <div>
+        <h5>Image</h5>
+        <img [src]="image.url" [alt]="image.title" />
+      </div>
+      <div>
+        <h5>Thumbnail</h5>
+        <img
+          [src]="image.thumbnailUrl"
+          [alt]="image.title.concat('-thumbnail')"
+        />
+      </div>
+    </div>
   </div>
 </ng-template>
 

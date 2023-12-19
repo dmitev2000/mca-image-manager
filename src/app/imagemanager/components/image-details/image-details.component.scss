@@ -15,9 +15,17 @@
     top: 15px;
     right: 15px;
   }
-  & > img {
-    width: 600px;
-    height: 600px;
+
+  &-iuitu {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 25px;
+  }
+
+  & img {
+    border-radius: 5px;
 
     @media screen and (max-width: 1000px) {
       & {
